@@ -2,7 +2,8 @@ package com.jorge.cds.intermedio.grupo4.web_app.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jorge.cds.intermedio.grupo4.web_app.dtos.UserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.CreateUserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.showUserDto;
 import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
 import com.jorge.cds.intermedio.grupo4.web_app.services.UserService;
 
@@ -26,12 +27,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")        //lista todos los usuarios datos completos
-    public List<UserDto> list(){
+    public List<showUserDto> list(){
         return userService.findAll();
     }
 
     @PostMapping("/register")   //registra un nuevo usuario
-    public ResponseEntity<?> create(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreateUserDto user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(new User(user)));
     }
     

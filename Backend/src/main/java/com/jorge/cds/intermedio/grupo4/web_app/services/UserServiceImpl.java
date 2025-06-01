@@ -10,7 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jorge.cds.intermedio.grupo4.web_app.dtos.UserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.CreateUserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.showUserDto;
 import com.jorge.cds.intermedio.grupo4.web_app.entities.Instructor;
 import com.jorge.cds.intermedio.grupo4.web_app.entities.Student;
 import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
@@ -33,9 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Override // lista todos los usuarios datos del dto
     @Transactional(readOnly = true)
-    public List<UserDto> findAll() {
-        List<UserDto> dtos = new ArrayList<>();
-        userRepository.findAll().forEach(user -> dtos.add(new UserDto(user)));
+    public List<showUserDto> findAll() {
+        List<showUserDto> dtos = new ArrayList<>();
+        userRepository.findAll().forEach(user -> dtos.add(new showUserDto(user)));
         return dtos;
     }
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
+        /*if (userRepository.existsByEmail(user.getEmail())) {
             throw new CustomException("P-409",
                     HttpStatus.CONFLICT,
                     "El email ya existe");
@@ -60,7 +61,8 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return userRepository.save(user);*/
+        return null;
     }
 
     @Override

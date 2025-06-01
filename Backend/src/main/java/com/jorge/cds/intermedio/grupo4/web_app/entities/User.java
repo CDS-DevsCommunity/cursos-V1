@@ -1,6 +1,12 @@
 package com.jorge.cds.intermedio.grupo4.web_app.entities;
 
-import com.jorge.cds.intermedio.grupo4.web_app.dtos.UserDto;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.CreateUserDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "id_usuario")
@@ -51,11 +57,45 @@ public class User {
     @NotBlank
     private String password;
 
-    public User(UserDto dto) {
+    public User(CreateUserDto dto) {
         this.userName = dto.getUserName();
         this.fullName = dto.getFullName();
         this.email = dto.getEmail();
         this.password = dto.getPassword();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+    @Override
+    public String getUsername() {
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+    }
+
+    public String getUserName() {
+        return this.userName;
     }
 
 }

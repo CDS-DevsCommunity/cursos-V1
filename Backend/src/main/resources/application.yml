@@ -1,0 +1,5 @@
+application:
+  security:
+    jwt:
+      secret-key: jorge2000
+      expiration: 15 # minutes

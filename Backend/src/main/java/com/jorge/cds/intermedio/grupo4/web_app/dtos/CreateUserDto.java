@@ -1,8 +1,5 @@
 package com.jorge.cds.intermedio.grupo4.web_app.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class CreateUserDto {
 
     //@JsonIgnore
     @NotNull(message = "El nombre completo no puede ser vacio")
@@ -31,13 +28,5 @@ public class UserDto {
     @NotNull(message = "La contraseña no puede ser vacio")
     @NotBlank(message = "La contraseña no puede estar vacío")
     private String password;
-
-    //lo tachado para nomostrar la contraseña y el nombre completo en el GET list
-    public UserDto(User user) {
-        this.fullName = user.getFullName();
-        this.userName = user.getUserName();
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-    }
 
 }

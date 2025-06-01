@@ -3,12 +3,12 @@ package com.jorge.cds.intermedio.grupo4.web_app.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.jorge.cds.intermedio.grupo4.web_app.dtos.UserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.showUserDto;
 import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
 
 public interface UserService {
     
-    List<UserDto> findAll();
+    List<showUserDto> findAll();
 
     Optional<User> finById(Long id);
 

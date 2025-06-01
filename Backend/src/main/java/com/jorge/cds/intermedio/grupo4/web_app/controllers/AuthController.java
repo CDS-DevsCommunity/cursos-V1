@@ -1,55 +1,59 @@
 package com.jorge.cds.intermedio.grupo4.web_app.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jorge.cds.intermedio.grupo4.web_app.dtos.LoginRequest;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.CreateUserDto;
+import com.jorge.cds.intermedio.grupo4.web_app.dtos.LoginRequestDTO;
+import com.jorge.cds.intermedio.grupo4.web_app.services.AuthService;
 
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-//@RestController
-//@RequestMapping("/api/auth")
+import com.jorge.cds.intermedio.grupo4.web_app.security.ApiConfig;
+import com.jorge.cds.intermedio.grupo4.web_app.security.AuthConstants;
+
+@RestController
+@RequestMapping(ApiConfig.API_BASE_PATH + "/auth")
 public class AuthController {
-    // @Autowired
-    // private AuthenticationManager authenticationManager; // Delega la autenticacion en un AuthenticationManager
+    
+    private final AuthService authService;
 
-    // @Autowired
-    // //private JwtTokenProvider jwtTokenProvider; // Crea y valida JWT (en el caso de que las credenciales sean correctas)
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
-    // @Autowired
-    // private HttpServletRequest httpServiceRequest;
+    @PostMapping("/create-user")
+    public void createUser(@RequestBody @Valid CreateUserDto createUserDto) {
+        authService.createUser(createUserDto);
+    }
 
-    // //Endpoint que recibe un LoginRequest y devuelve un JWT
-    // @PostMapping("/login")
-    // public ResponseEntity<?> login(@Valid @RequestBody LoginRequest login) {
-    //     try {
+    @PostMapping("/login")
+    public void login(@RequestBody @Valid LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+        final String token = authService.login(loginRequestDTO);
+        final Cookie cookie = createAuthCookie(token);
+        response.addCookie(cookie);
+    }
 
-    //         Authentication authentication = authenticationManager.authenticate( // 1) Autenticar credenciales
-    //                 new UsernamePasswordAuthenticationToken(
-    //                         login.getUsername(),
-    //                         login.getPassword()));
-    //         String jwt = jwtTokenProvider.generateToken(authentication); // 2) Generar JWT(por implementar por buenas practicas)
+    @PostMapping("/logout")
+    public void logout(HttpServletResponse response) {
+        final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, StringUtils.EMPTY);
+        cookie.setMaxAge(0);
+    }
 
-    //         return ResponseEntity.ok(new JwtResponse(jwt)); // 3) Enviar respuesta con el token
+    private Cookie createAuthCookie(String token) {
+        final String SAME_SITE_KEY = "SameSite";
+        final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, token);
+        cookie.setHttpOnly(AuthConstants.HTTP_ONLY);
+        cookie.setSecure(AuthConstants.COOKIE_SECURE);
+        cookie.setMaxAge(AuthConstants.COOKIE_MAX_AGE);
+        cookie.setAttribute(SAME_SITE_KEY, AuthConstants.SAME_SITE);
+        return cookie;
+    }
 
-    //     } catch (BadCredentialsException ex) {
-
-    //         // 401 si usuario/contraseña no coinciden
-    //         return ResponseEntity.status(401).body("Credenciales incorrectas");
-    //     } catch (AuthenticationException ex) {
-
-    //         // 500 en caso de otro fallo en autent.
-    //         return ResponseEntity.status(500).body("Error en proceso de autenticación");
-    //     }
-    // }
 }
