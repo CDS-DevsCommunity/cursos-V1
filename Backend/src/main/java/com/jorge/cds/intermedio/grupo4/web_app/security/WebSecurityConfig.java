@@ -48,6 +48,10 @@ public class WebSecurityConfig {
     public final static String LOGIN_URL_MATCHER = ApiConfig.API_BASE_PATH + "/auth/login";
     public final static String LOG_OUT_URL_MATCHER = ApiConfig.API_BASE_PATH + "/auth/logout";
 
+    /*
+     * el encargado de configurar la seguridad de la aplicación. El método recibe una instancia de 
+     * HttpSecurity que se encarga de configurar la seguridad de la aplicación.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         final Filter jwtFilter = jwtAuthenticationFilter();
@@ -55,8 +59,9 @@ public class WebSecurityConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers(HttpMethod.POST, LOGIN_URL_MATCHER).permitAll()
-                .requestMatchers("/api/users/**").permitAll()   // libre acceso a los usuarios
-                .requestMatchers(ApiConfig.API_BASE_PATH + "/auth/create-user").permitAll()
+                .requestMatchers(HttpMethod.POST, LOG_OUT_URL_MATCHER).permitAll()
+                //.requestMatchers("/api/users/**").permitAll()   // libre acceso a los usuarios
+                //.requestMatchers(ApiConfig.API_BASE_PATH + "/auth/create-user").permitAll()
                 //.requestMatchers("/api/users/**").authenticated()         // acceso autenticado a los usuarios
                 .anyRequest().denyAll()
             )
@@ -65,13 +70,15 @@ public class WebSecurityConfig {
                     .logoutRequestMatcher(new AntPathRequestMatcher(LOG_OUT_URL_MATCHER, HttpMethod.POST.name()))
                     .logoutSuccessHandler((request, response, authentication) -> {
                         response.setStatus(HttpStatus.NO_CONTENT.value());
-                        final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, null);
+                        final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, "");
                         cookie.setMaxAge(0);
+                        cookie.setPath(ApiConfig.API_BASE_PATH + "/auth");
+                        cookie.setHttpOnly(true);
                         response.addCookie(cookie);
                     })
                 ;
             })
-            .addFilterBefore(jwtFilter, LogoutFilter.class)
+            .addFilterAfter(jwtFilter, LogoutFilter.class)
             .csrf((csrf) -> {
                     try {
                         csrf.disable()
@@ -95,7 +102,11 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-
+    /*
+     * Es el componente principal de Spring Security que gestiona la autenticación
+     * Verifica las credenciales del usuario y lo autentica
+     * La implementación más común es DaoAuthenticationProvider
+     */
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();

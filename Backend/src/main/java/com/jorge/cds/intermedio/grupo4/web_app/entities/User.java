@@ -64,11 +64,24 @@ public class User implements UserDetails {
         this.password = dto.getPassword();
     }
 
+    /*
+     * Metodos de userDetails
+     * 
+     * Estos métodos son necesarios para que Spring Security pueda manejar la autenticación y autorización de usuarios
+     * 
+     * getAuthorities() devuelve una colección de GrantedAuthority que representa los roles o permisos del usuario, en este caso
+     * solo devuelve vacio por que se hace una generalizacion de usuario
+     * el rol de la entidad se defie en las clases hijas de User, como Admin o Instructor.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    /*
+     * Los siguientes métodos son parte de la interfaz UserDetails y se utilizan para determinar el estado del usuario,
+     * todos usados por spring security para determinar si el usuario puede acceder al sistema.
+     */
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
@@ -91,7 +104,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        return this.userName;
     }
 
     public String getUserName() {

@@ -1,5 +1,8 @@
 package com.jorge.cds.intermedio.grupo4.web_app.security;
 
+/*
+ * Esta clase contien la configuración de los constantes de autenticación o Cookie
+ */
 public class AuthConstants {
 
     private AuthConstants() {

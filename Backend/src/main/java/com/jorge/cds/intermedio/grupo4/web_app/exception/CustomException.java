@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Data;
 
+/*
+ * Clase que pesonaliza las excepciones de la aplicación
+ */
 @Data
 public class CustomException extends RuntimeException {
 

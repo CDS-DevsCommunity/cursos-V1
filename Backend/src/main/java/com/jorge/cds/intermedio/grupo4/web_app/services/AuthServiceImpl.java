@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         logger.info("[USER] : Loading user by email {}", username);
-        return userRepository.findByEmail(username)
+        return userRepository.findByUserName(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

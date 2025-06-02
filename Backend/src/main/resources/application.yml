@@ -1,5 +1,5 @@
 application:
   security:
     jwt:
-      secret-key: jorge2000
+      secret-key: HS256-esto-es-un-secreto-muy-fuerte-2025-!!!
       expiration: 15 # minutes

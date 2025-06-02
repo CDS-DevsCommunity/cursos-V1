@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    // Correguir en el futuro
     @Override
     @Transactional(readOnly = true)
     public String userRole(User user) {

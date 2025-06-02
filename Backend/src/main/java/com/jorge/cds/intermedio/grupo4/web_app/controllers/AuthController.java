@@ -21,7 +21,7 @@ import com.jorge.cds.intermedio.grupo4.web_app.security.AuthConstants;
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + "/auth")
 public class AuthController {
-    
+
     private final AuthService authService;
 
     public AuthController(AuthService authService) {
@@ -40,12 +40,9 @@ public class AuthController {
         response.addCookie(cookie);
     }
 
-    @PostMapping("/logout")
-    public void logout(HttpServletResponse response) {
-        final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, StringUtils.EMPTY);
-        cookie.setMaxAge(0);
-    }
-
+    /*
+     *  Creación de la cookie de autenticación
+     */
     private Cookie createAuthCookie(String token) {
         final String SAME_SITE_KEY = "SameSite";
         final Cookie cookie = new Cookie(AuthConstants.TOKEN_COOKIE_NAME, token);
@@ -53,6 +50,7 @@ public class AuthController {
         cookie.setSecure(AuthConstants.COOKIE_SECURE);
         cookie.setMaxAge(AuthConstants.COOKIE_MAX_AGE);
         cookie.setAttribute(SAME_SITE_KEY, AuthConstants.SAME_SITE);
+        cookie.setPath(ApiConfig.API_BASE_PATH + "/auth");
         return cookie;
     }
 

@@ -4,6 +4,9 @@ import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+/*
+ * Esta clase es un mapper que convierte los DTOs a una entidad User o a un objeto Authentication.
+ */
 public class AuthMapper {
 
     public static User fromDto(CreateUserDto dto) {

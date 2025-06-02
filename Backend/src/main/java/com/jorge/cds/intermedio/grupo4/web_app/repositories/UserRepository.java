@@ -10,6 +10,6 @@ import com.jorge.cds.intermedio.grupo4.web_app.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByUserName(String userName);
 
 }
